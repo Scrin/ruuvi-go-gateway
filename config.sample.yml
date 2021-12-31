@@ -1,0 +1,39 @@
+# MAC address to use as the gateway mac address
+gw_mac: 00:00:00:00:00:00
+
+# Whether to include all advertisements (true) or just those from RuuviTags (false)
+all_advertisements: false
+
+# Publish the data to MQTT in Ruuvi Gateway format
+mqtt:
+  # Flag to enable or disable publishing the data to a MQTT server
+  enabled: false
+  broker_address: ip.or.hostname
+  broker_port: 1883
+  client_id: ruuvi-go-gateway
+  username: ruuvigogateway
+  password: ruuvipassword
+  # Topic prefix where to publish, in format <topic_prefix>/<mac>
+  topic_prefix: ruuvi
+
+# Publish the data by sending HTTP POSTs in Ruuvi Gateway format
+http:
+  # Flag to enable or disable publishing the data to a MQTT server
+  enabled: false
+  # URL including scheme and hostname or ip, and optionally a port and a subpath
+  url: http://ip.or.hostname:8080/record
+  # Interval for sending measurements. Accepts values in go duration format ( https://pkg.go.dev/time#ParseDuration ), for example 1m30s
+  interval: 10s
+  username: ruuvigogateway
+  password: ruuvipassword
+
+# Logging options for ruuvi-go-gateway itself
+logging:
+  # Type can be either "structured", "json" or "simple"
+  type: simple
+  # Valid logging levels from most verbose to least verbose: trace, debug, info, warn, error, fatal, panic
+  level: info
+  # Include timestamp in the log line. Can be useful to turn off with certain logging systems which add their own timestamps
+  timestamps: true
+  # Whether to include the log caller in the logs. This will increase the size of logs but it helps in troubleshooting in some cases
+  with_caller: false

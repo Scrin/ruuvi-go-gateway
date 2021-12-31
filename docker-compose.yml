@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+  ruuvigateway:
+    image: ghcr.io/scrin/ruuvi-go-gateway
+    container_name: ruuvi-go-gateway
+    restart: unless-stopped
+    devices:
+      - "/dev/bus/usb/002/001:/dev/bus/usb/002/001" # your correct bluetooth adapter
+    volumes:
+      - ./config.yml:/config.yml:ro
