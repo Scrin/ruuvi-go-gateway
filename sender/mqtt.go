@@ -44,6 +44,8 @@ func SetupMQTT(conf config.MQTT) {
 	opts.SetClientID(conf.ClientID)
 	opts.SetUsername(conf.Username)
 	opts.SetPassword(conf.Password)
+	opts.SetAutoReconnect(true)
+	opts.SetMaxReconnectInterval(10 * time.Second)
 	mqttClient = mqtt.NewClient(opts)
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
