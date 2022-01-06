@@ -39,10 +39,14 @@ func SetupMQTT(conf config.MQTT) {
 		"topic_prefix": conf.TopicPrefix,
 	}).Info("Starting MQTT")
 
+	clientID := conf.ClientID
+	if clientID == "" {
+		clientID = "ruuvi-go-gateway"
+	}
 	opts := mqtt.NewClientOptions()
 	opts.SetCleanSession(false)
 	opts.AddBroker(server)
-	opts.SetClientID(conf.ClientID)
+	opts.SetClientID(clientID)
 	opts.SetUsername(conf.Username)
 	opts.SetPassword(conf.Password)
 	opts.SetKeepAlive(10 * time.Second)
