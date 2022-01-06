@@ -40,6 +40,7 @@ func SetupMQTT(conf config.MQTT) {
 	}).Info("Starting MQTT")
 
 	opts := mqtt.NewClientOptions()
+	opts.SetCleanSession(false)
 	opts.AddBroker(server)
 	opts.SetClientID(conf.ClientID)
 	opts.SetUsername(conf.Username)
