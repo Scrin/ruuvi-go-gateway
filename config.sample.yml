@@ -8,8 +8,8 @@ all_advertisements: false
 mqtt:
   # Flag to enable or disable publishing the data to a MQTT server
   enabled: false
-  broker_address: ip.or.hostname
-  broker_port: 1883
+  # MQTT broker url, including scheme (tcp, ssl or ws), hostname or IP address, and port
+  broker_url: tcp://ip.or.hostname:1883
   client_id: ruuvi-go-gateway
   username: ruuvigogateway
   password: ruuvipassword

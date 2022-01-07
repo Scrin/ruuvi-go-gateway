@@ -11,6 +11,7 @@ import (
 
 type MQTT struct {
 	Enabled       *bool  `yaml:"enabled,omitempty"`
+	BrokerUrl     string `yaml:"broker_url"`
 	BrokerAddress string `yaml:"broker_address"`
 	BrokerPort    int    `yaml:"broker_port"`
 	ClientID      string `yaml:"client_id"`
