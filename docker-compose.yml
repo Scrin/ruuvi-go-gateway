@@ -4,6 +4,9 @@ services:
     image: ghcr.io/scrin/ruuvi-go-gateway
     container_name: ruuvi-go-gateway
     restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
     devices:
       - "/dev/bus/usb/002/001:/dev/bus/usb/002/001" # your correct bluetooth adapter
     volumes:
