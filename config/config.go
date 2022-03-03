@@ -38,6 +38,7 @@ type Logging struct {
 type Config struct {
 	GwMac             string  `yaml:"gw_mac"`
 	AllAdvertisements bool    `yaml:"all_advertisements"`
+	HciIndex          int     `yaml:"hci_index"`
 	MQTT              *MQTT   `yaml:"mqtt,omitempty"`
 	HTTP              *HTTP   `yaml:"http,omitempty"`
 	Logging           Logging `yaml:"logging"`
@@ -46,7 +47,7 @@ type Config struct {
 
 func ReadConfig(configFile string, strict bool) (Config, error) {
 	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
-		return Config{}, errors.New(fmt.Sprintf("No config found! Tried to open \"%s\"", configFile))
+		return Config{}, fmt.Errorf("no config found! Tried to open \"%s\"", configFile)
 	}
 
 	f, err := os.Open(configFile)

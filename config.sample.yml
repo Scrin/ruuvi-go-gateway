@@ -4,6 +4,9 @@ gw_mac: 00:00:00:00:00:00
 # Whether to include all advertisements (true) or just those from RuuviTags (false)
 all_advertisements: false
 
+# HCI device index for the bluetooth adapter to use. 0 by default, which should correspond to the hci0 device
+hci_index: 0
+
 # Publish the data to MQTT in Ruuvi Gateway format
 mqtt:
   # Flag to enable or disable publishing the data to a MQTT server

@@ -32,11 +32,15 @@ func Run(config config.Config) {
 		log.Fatal("Neither MQTT nor HTTP is configured, check the config")
 	}
 
-	device, err := dev.NewDevice("default", ble.OptScanParams(cmd.LESetScanParameters{
-		LEScanType: 0, // passive scan
-	}))
+	device, err := dev.NewDevice("default",
+		ble.OptDeviceID(config.HciIndex),
+		ble.OptScanParams(cmd.LESetScanParameters{
+			LEScanType: 0, // passive scan
+		}))
 	if err != nil {
-		log.WithError(err).Fatal("Can't setup default bluetooth device")
+		log.WithError(err).WithFields(log.Fields{
+			"hci_index": config.HciIndex,
+		}).Fatal("Can't setup bluetooth device")
 	}
 	ble.SetDefaultDevice(device)
 	advHandler := func(adv ble.Advertisement) {
