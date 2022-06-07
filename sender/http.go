@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Scrin/ruuvi-go-gateway/config"
@@ -30,6 +31,7 @@ type httpMessageTag struct {
 	Data      string `json:"data"`
 }
 
+var lock sync.Mutex
 var tags map[string]httpMessageTag = make(map[string]httpMessageTag)
 var httpClient http.Client
 
@@ -54,7 +56,9 @@ func SetupHTTP(conf config.HTTP, gwMac string) {
 				GwMac:       gwMac,
 				Tags:        tags,
 			}}
+			lock.Lock()
 			data, err := json.Marshal(msg)
+			lock.Unlock()
 			if err != nil {
 				log.WithError(err).Error("Failed to serialize data")
 			}
@@ -83,5 +87,7 @@ func SendHTTP(conf config.HTTP, adv ble.Advertisement) {
 		Timestamp: fmt.Sprint(time.Now().Unix()),
 		Data:      fmt.Sprintf("0201%X%XFF%X", flags, len(data)+1, data),
 	}
+	lock.Lock()
 	tags[mac] = tag
+	lock.Unlock()
 }
