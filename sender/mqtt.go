@@ -22,7 +22,7 @@ type mqttMessage struct {
 	Coords string        `json:"coords"`
 }
 
-var mqttClient mqtt.Client
+var client mqtt.Client
 
 func SetupMQTT(conf config.MQTT) {
 	address := conf.BrokerAddress
@@ -55,9 +55,31 @@ func SetupMQTT(conf config.MQTT) {
 	opts.SetKeepAlive(10 * time.Second)
 	opts.SetAutoReconnect(true)
 	opts.SetMaxReconnectInterval(10 * time.Second)
-	mqttClient = mqtt.NewClient(opts)
-	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
+	if conf.LWTTopic == nil || *conf.LWTTopic != "" {
+		topic := conf.TopicPrefix + "/gw_status"
+		payload := conf.LWTOfflinePayload
+		if conf.LWTTopic != nil {
+			topic = *conf.LWTTopic
+		}
+		if payload == "" {
+			payload = "{\"state\":\"offline\"}"
+		}
+		opts.SetWill(topic, payload, 0, true)
+	}
+	client = mqtt.NewClient(opts)
+	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
+	}
+	if conf.LWTTopic == nil || *conf.LWTTopic != "" {
+		topic := conf.TopicPrefix + "/gw_status"
+		payload := conf.LWTOnlinePayload
+		if conf.LWTTopic != nil {
+			topic = *conf.LWTTopic
+		}
+		if payload == "" {
+			payload = "{\"state\":\"online\"}"
+		}
+		client.Publish(topic, 0, true, payload)
 	}
 }
 
@@ -78,6 +100,6 @@ func SendMQTT(conf config.MQTT, adv ble.Advertisement, gwMac string) {
 	if err != nil {
 		log.WithError(err).Error("Failed to serialize data")
 	} else {
-		mqttClient.Publish(conf.TopicPrefix+"/"+mac, 0, false, string(data))
+		client.Publish(conf.TopicPrefix+"/"+mac, 0, false, string(data))
 	}
 }

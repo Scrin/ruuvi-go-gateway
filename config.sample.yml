@@ -18,6 +18,13 @@ mqtt:
   password: ruuvipassword
   # Topic prefix where to publish, in format <topic_prefix>/<mac>
   topic_prefix: ruuvi
+  # Topic where to publish LWT "status messages" on connect/disconnect. Empty means disabled.
+  # The default value for this is <topic_prefix>/gw_status which matches the behavior of the physical Ruuvi Gateway
+  #lwt_topic: ""
+  # Payload that will be published to lwt_topic when ruuvi-go-gateway connects
+  lwt_online_payload: '{"state":"online"}'
+  # Payload that will be published to lwt_topic when ruuvi-go-gateway disconnects
+  lwt_offline_payload: '{"state":"offline"}'
 
 # Publish the data by sending HTTP POSTs in Ruuvi Gateway format
 http:
