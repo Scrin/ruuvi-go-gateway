@@ -58,7 +58,7 @@ func Run(config config.Config) {
 					sender.SendMQTT(*config.MQTT, adv, gwMac)
 				}
 				if useHTTP {
-					sender.SendHTTP(*config.HTTP, adv)
+					sender.SendHTTP(adv)
 				}
 			}
 		}

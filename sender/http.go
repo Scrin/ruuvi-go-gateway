@@ -78,7 +78,7 @@ func SetupHTTP(conf config.HTTP, gwMac string) {
 	}()
 }
 
-func SendHTTP(conf config.HTTP, adv ble.Advertisement) {
+func SendHTTP(adv ble.Advertisement) {
 	mac := strings.ToUpper(adv.Addr().String())
 	data := adv.ManufacturerData()
 	flags := []byte{0x00} // the actual advertisement flags don't seem to be available, so just use zero
