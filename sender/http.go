@@ -35,6 +35,12 @@ var lock sync.Mutex
 var tags map[string]httpMessageTag = make(map[string]httpMessageTag)
 var httpClient http.Client
 
+func handleBodyClose(req *http.Request) {
+	if err := req.Body.Close(); err != nil {
+		log.WithError(err).Error(fmt.Sprintf("Failed to close request body: %s", err))
+	}
+}
+
 func SetupHTTP(conf config.HTTP, gwMac string) {
 	log.WithFields(log.Fields{
 		"url":      conf.URL,
@@ -62,8 +68,9 @@ func SetupHTTP(conf config.HTTP, gwMac string) {
 			if err != nil {
 				log.WithError(err).Error("Failed to serialize data")
 			}
-			req, err := http.NewRequest("POST", conf.URL, strings.NewReader(string(data)))
+			req, err := http.NewRequest(http.MethodPost, conf.URL, strings.NewReader(string(data)))
 			if err != nil {
+				handleBodyClose(req)
 				log.WithError(err).Error("Failed create a POST request")
 			}
 			if conf.Username != "" {
@@ -72,8 +79,11 @@ func SetupHTTP(conf config.HTTP, gwMac string) {
 
 			_, err = httpClient.Do(req)
 			if err != nil {
+				handleBodyClose(req)
 				log.WithError(err).Error("Failed POST data")
 			}
+
+			handleBodyClose(req)
 		}
 	}()
 }
