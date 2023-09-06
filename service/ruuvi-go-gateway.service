@@ -1,0 +1,10 @@
+[Unit]
+Description="Ruuvi go gateway"
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/ruuvi-go-gateway -config /etc/ruuvi-go-gateway/config.yml
+
+[Install]
+WantedBy=multi-user.target
