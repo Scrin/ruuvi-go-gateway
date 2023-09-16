@@ -3,6 +3,7 @@ package sender
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"sync"
@@ -27,7 +28,7 @@ type httpMessageData struct {
 
 type httpMessageTag struct {
 	Rssi      int    `json:"rssi"`
-	Timestamp string `json:"timestamp"`
+	Timestamp int64  `json:"timestamp"`
 	Data      string `json:"data"`
 }
 
@@ -70,10 +71,12 @@ func SetupHTTP(conf config.HTTP, gwMac string) {
 				req.SetBasicAuth(conf.Username, conf.Password)
 			}
 
-			_, err = httpClient.Do(req)
+			resp, err := httpClient.Do(req)
 			if err != nil {
 				log.WithError(err).Error("Failed POST data")
 			}
+			io.ReadAll(resp.Body)
+			resp.Body.Close()
 		}
 	}()
 }
@@ -84,7 +87,7 @@ func SendHTTP(conf config.HTTP, adv ble.Advertisement) {
 	flags := []byte{0x00} // the actual advertisement flags don't seem to be available, so just use zero
 	tag := httpMessageTag{
 		Rssi:      adv.RSSI(),
-		Timestamp: fmt.Sprint(time.Now().Unix()),
+		Timestamp: time.Now().Unix(),
 		Data:      fmt.Sprintf("0201%X%XFF%X", flags, len(data)+1, data),
 	}
 	lock.Lock()
