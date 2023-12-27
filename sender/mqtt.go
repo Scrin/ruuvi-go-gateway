@@ -8,7 +8,7 @@ import (
 
 	"github.com/Scrin/ruuvi-go-gateway/config"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/go-ble/ble"
+	"github.com/rigado/ble"
 	log "github.com/sirupsen/logrus"
 )
 

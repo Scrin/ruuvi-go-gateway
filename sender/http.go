@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/Scrin/ruuvi-go-gateway/config"
-	"github.com/go-ble/ble"
+	"github.com/rigado/ble"
 	log "github.com/sirupsen/logrus"
 )
 
