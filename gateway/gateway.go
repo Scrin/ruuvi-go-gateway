@@ -7,9 +7,9 @@ import (
 
 	"github.com/Scrin/ruuvi-go-gateway/config"
 	"github.com/Scrin/ruuvi-go-gateway/sender"
-	"github.com/go-ble/ble"
-	"github.com/go-ble/ble/examples/lib/dev"
-	"github.com/go-ble/ble/linux/hci/cmd"
+	"github.com/rigado/ble"
+	"github.com/rigado/ble/examples/lib/dev"
+	"github.com/rigado/ble/linux/hci/cmd"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -36,6 +36,8 @@ func Run(config config.Config) {
 		ble.OptDeviceID(config.HciIndex),
 		ble.OptScanParams(cmd.LESetScanParameters{
 			LEScanType: 0, // passive scan
+			LEScanInterval: 0x10,
+			LEScanWindow: 0x10,
 		}))
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
